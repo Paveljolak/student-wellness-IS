@@ -1,0 +1,19 @@
+.hello-component {
+  width: min(560px, 92vw);
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.2);
+}
+
+.hello-component__text {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.3vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  color: #f8fafc;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
