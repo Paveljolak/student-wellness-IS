@@ -1,23 +1,35 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout/Layout';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-function ComingSoon({ label = 'Student Wellness' }) {
+function ComingSoon({ label = 'Feature' }) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-3">
-      <p className="text-5xl">🚧</p>
-      <p className="text-xl font-semibold text-gray-700">{label}</p>
-      <p className="text-gray-400">Feature coming soon…</p>
+    <div className="flex flex-col items-center justify-center h-64 gap-3">
+      <p className="text-4xl">🚧</p>
+      <p className="text-lg font-semibold text-gray-700">{label}</p>
+      <p className="text-gray-400">Coming soon…</p>
     </div>
   );
 }
 
 export default function App() {
   return (
-    <>
+    <AuthProvider>
       <Routes>
-        <Route path="*" element={<ComingSoon />} />
+        <Route path="/login"    element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<ComingSoon label="Dashboard" />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      <Toaster position="top-right" />
-    </>
+      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+    </AuthProvider>
   );
 }
