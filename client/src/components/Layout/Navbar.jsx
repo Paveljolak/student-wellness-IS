@@ -2,7 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const links = [
-  { to: '/', label: 'Dashboard', icon: '📊' },
+  { to: '/',        label: 'Dashboard', icon: '📊' },
+  { to: '/profile', label: 'Profile',   icon: '👤' },
 ];
 
 export default function Navbar() {
