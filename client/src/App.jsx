@@ -6,6 +6,7 @@ import Layout from './components/Layout/Layout';
 import Login    from './pages/Login';
 import Register from './pages/Register';
 import Profile  from './pages/Profile';
+import FoodLog  from './pages/FoodLog';
 
 function ComingSoon({ label = 'Feature' }) {
   return (
@@ -25,8 +26,9 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route path="/"        element={<ComingSoon label="Dashboard" />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/"         element={<ComingSoon label="Dashboard" />} />
+            <Route path="/food-log" element={<FoodLog />} />
+            <Route path="/profile"  element={<Profile />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
