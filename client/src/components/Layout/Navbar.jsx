@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 const links = [
   { to: '/',         label: 'Dashboard', icon: '📊' },
   { to: '/food-log', label: 'Food Log',  icon: '🍽️' },
+  { to: '/water',    label: 'Water',     icon: '💧' },
   { to: '/profile',  label: 'Profile',   icon: '👤' },
 ];
 
