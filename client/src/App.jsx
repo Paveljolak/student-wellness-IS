@@ -7,6 +7,7 @@ import Login    from './pages/Login';
 import Register from './pages/Register';
 import Profile  from './pages/Profile';
 import FoodLog  from './pages/FoodLog';
+import WaterLog from './pages/WaterLog';
 
 function ComingSoon({ label = 'Feature' }) {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/"         element={<ComingSoon label="Dashboard" />} />
             <Route path="/food-log" element={<FoodLog />} />
+            <Route path="/water"    element={<WaterLog />} />
             <Route path="/profile"  element={<Profile />} />
           </Route>
         </Route>
