@@ -7,17 +7,8 @@ import Login    from './pages/Login';
 import Register from './pages/Register';
 import Profile  from './pages/Profile';
 import FoodLog  from './pages/FoodLog';
-import WaterLog from './pages/WaterLog';
-
-function ComingSoon({ label = 'Feature' }) {
-  return (
-    <div className="flex flex-col items-center justify-center h-64 gap-3">
-      <p className="text-4xl">🚧</p>
-      <p className="text-lg font-semibold text-gray-700">{label}</p>
-      <p className="text-gray-400">Coming soon…</p>
-    </div>
-  );
-}
+import WaterLog  from './pages/WaterLog';
+import Dashboard from './pages/Dashboard';
 
 export default function App() {
   return (
@@ -27,7 +18,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route path="/"         element={<ComingSoon label="Dashboard" />} />
+            <Route path="/"         element={<Dashboard />} />
             <Route path="/food-log" element={<FoodLog />} />
             <Route path="/water"    element={<WaterLog />} />
             <Route path="/profile"  element={<Profile />} />
