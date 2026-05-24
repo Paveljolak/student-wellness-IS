@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+const cors    = require('cors');
+const path    = require('path');
 
 const app = express();
 
@@ -17,6 +18,14 @@ app.use('/api/users',       userRoutes);
 app.use('/api/foods',       foodRoutes);
 app.use('/api/food-logs',   foodLogRoutes);
 app.use('/api/water-logs',  waterLogRoutes);
+
+// Serve React build when deployed (client/dist must exist)
+const distPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(distPath));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(distPath, 'index.html'));
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
