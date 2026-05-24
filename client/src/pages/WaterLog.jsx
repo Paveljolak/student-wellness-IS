@@ -5,6 +5,7 @@ import { useAuth }      from '../context/AuthContext';
 import WaterWidget      from '../components/WaterWidget';
 
 const QUICK_AMOUNTS = [150, 250, 330, 500, 750];
+const PAGE_SIZE = 5;
 
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 function shiftDate(iso, days) {
@@ -25,6 +26,9 @@ export default function WaterLog() {
   const [totalMl,   setTotalMl]   = useState(0);
   const [custom,    setCustom]    = useState('');
   const [loading,   setLoading]   = useState(false);
+  const [logsOpen,  setLogsOpen]  = useState(true);
+  const [sortOrder, setSortOrder] = useState('newest');
+  const [page,      setPage]      = useState(1);
 
   const loadLogs = useCallback(async (d) => {
     setLoading(true);
@@ -36,7 +40,7 @@ export default function WaterLog() {
     finally  { setLoading(false); }
   }, []);
 
-  useEffect(() => { loadLogs(date); }, [date, loadLogs]);
+  useEffect(() => { loadLogs(date); setPage(1); }, [date, loadLogs]);
 
   async function addWater(ml) {
     if (!ml || ml <= 0) { toast.error('Enter a valid amount'); return; }
@@ -132,31 +136,72 @@ export default function WaterLog() {
 
       {/* Log list */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-          Log Entries ({logs.length})
-        </h3>
-        {loading ? (
-          <div className="text-center text-gray-400 py-6">Loading…</div>
-        ) : logs.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">
-            <p className="text-3xl mb-2">💧</p>
-            <p>No water logged for this day yet.</p>
-          </div>
-        ) : (
-          <ul className="divide-y divide-gray-50">
-            {[...logs].reverse().map(l => (
-              <li key={l.id} className="py-2.5 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="text-blue-400 text-lg">💧</span>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-600">{l.amount_ml} ml</p>
-                    <p className="text-xs text-gray-400">{fmtTime(l.created_at)}</p>
+        <div className="flex items-center justify-between mb-2">
+          <button
+            onClick={() => setLogsOpen(o => !o)}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-500 uppercase tracking-wide focus:outline-none"
+          >
+            Log Entries ({logs.length})
+            <span className="text-xs">{logsOpen ? '▲' : '▼'}</span>
+          </button>
+          {logsOpen && logs.length > 0 && (
+            <select
+              value={sortOrder}
+              onChange={e => { setSortOrder(e.target.value); setPage(1); }}
+              className="input w-auto text-sm py-1"
+            >
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+            </select>
+          )}
+        </div>
+
+        {logsOpen && (
+          loading ? (
+            <div className="text-center text-gray-400 py-6">Loading…</div>
+          ) : logs.length === 0 ? (
+            <div className="text-center text-gray-400 py-8">
+              <p className="text-3xl mb-2">💧</p>
+              <p>No water logged for this day yet.</p>
+            </div>
+          ) : (() => {
+            const sorted = sortOrder === 'newest' ? [...logs].reverse() : [...logs];
+            const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
+            const pageItems = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+            return (
+              <>
+                <ul className="divide-y divide-gray-50">
+                  {pageItems.map(l => (
+                    <li key={l.id} className="py-2.5 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="text-blue-400 text-lg">💧</span>
+                        <div>
+                          <p className="text-sm font-semibold text-blue-600">{l.amount_ml} ml</p>
+                          <p className="text-xs text-gray-400">{fmtTime(l.created_at)}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => removeLog(l.id, l.amount_ml)} className="btn-danger">✕</button>
+                    </li>
+                  ))}
+                </ul>
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                    <button
+                      onClick={() => setPage(p => p - 1)}
+                      disabled={page === 1}
+                      className="btn-secondary text-xs px-3 py-1.5 disabled:opacity-40"
+                    >Prev</button>
+                    <span className="text-xs text-gray-400">Page {page} of {totalPages}</span>
+                    <button
+                      onClick={() => setPage(p => p + 1)}
+                      disabled={page === totalPages}
+                      className="btn-secondary text-xs px-3 py-1.5 disabled:opacity-40"
+                    >Next</button>
                   </div>
-                </div>
-                <button onClick={() => removeLog(l.id, l.amount_ml)} className="btn-danger">✕</button>
-              </li>
-            ))}
-          </ul>
+                )}
+              </>
+            );
+          })()
         )}
       </div>
 
