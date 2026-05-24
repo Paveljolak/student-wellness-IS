@@ -1,7 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
+import { useNotifications } from '../../hooks/useNotifications';
 
 export default function Layout() {
+  useNotifications();
+
   return (
     <div className="flex min-h-screen">
       <Navbar />

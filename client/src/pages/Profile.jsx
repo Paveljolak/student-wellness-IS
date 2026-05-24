@@ -2,6 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { usersApi } from '../api/users';
 import { useAuth }  from '../context/AuthContext';
+import NotificationSettings from '../components/NotificationSettings';
 
 const ACTIVITY_OPTIONS = [
   { value: 'sedentary',         label: 'Sedentary' },
@@ -159,6 +160,9 @@ export default function Profile() {
           ))}
         </div>
       </div>
+
+      {/* Notification settings */}
+      <NotificationSettings />
 
       {/* Account info */}
       <div className="card">
